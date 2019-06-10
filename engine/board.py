@@ -1,8 +1,9 @@
 import player
 import picker
+import adp_list
 
 class Cell():
-    """ class representing a cell on the board """
+    # class representing a cell on the board
 
     def __init__(self, draft_rnd, pick, player):
 
@@ -18,16 +19,17 @@ class Cell():
 
 
 class Board():
-    """ class representing a draft board """
+    # class representing a draft board
 
-    def __init__(self, rounds, pickers):
+    def __init__(self, rounds, pickers, adp_list):
 
         self.rounds = rounds
         self.pickers = pickers
+	self.adp_list = adp_list
 
-        """ initialize board here                    """
-        """ nested for loop to create the board.     """
-        """ call cell constructor for each iteration """
+        # initialize board here                    
+        # nested for loop to create the board.     
+        # call cell constructor for each iteration 
 
     def update_board():
 
