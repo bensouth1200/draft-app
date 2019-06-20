@@ -1,5 +1,4 @@
-import numpy as np
-import random
+from numpy import random
 
 class Picker():
 
@@ -15,16 +14,16 @@ class Picker():
 	if fav_team in teams:
 		return fav_team
 	else:
-		return np.random.choice(teams)
+		return numpy.random.choice(teams)
 
     def make_pick(player_index, distribution):
         # dumb function. Randomly choose a player from the list       
         # provided based on the percentages provided with the players 
-	return np.random.choice(player_index, 1, distribution)
+	return numpy.random.choice(player_index, 1, distribution)
 
     def think(adp_list):
         # here is the function all pickers will override to 
         # fun stuff.                                        
-	player_index = # take first five players from ADP list
+	#player_index = # take first five players from ADP list
 	distribution = [0.2, 0.2, 0.2, 0.2, 0.2]
         return make_pick(player_index, distribution) # ?

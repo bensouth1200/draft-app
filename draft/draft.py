@@ -1,11 +1,13 @@
 import board
 import picker
 import adp_list
+import click
 
 class Config(object):
 
 	def __init__(self):
 		#constructor for Config object
+		pass
 
 
 pass_config = click.make_pass_decorator(Config, ensure=True)
@@ -19,10 +21,11 @@ pass_config = click.make_pass_decorator(Config, ensure=True)
 @click.option('--position', default=-1, help='Position that you wish to draft from')
 @pass_config
 def cli(Config):
+	pass
 
 @cli.command()
 @pass_config
-def draft(Config)
+def draft(Config):
 #def draft(year, draft_format="standard", rounds=15, teams=12, players=[]):
 	
 	###

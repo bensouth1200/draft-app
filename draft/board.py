@@ -1,4 +1,3 @@
-import player
 import picker
 import adp_list
 
@@ -88,5 +87,7 @@ class Board():
 	self.set_cell(draft_rnd, pick, self.get_pickers()[index].think())
     
     def export_table():
+	pass
 
     def update_board():
+	pass
