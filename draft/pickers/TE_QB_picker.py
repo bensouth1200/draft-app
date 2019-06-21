@@ -1,4 +1,4 @@
-import picker
+from picker import Picker
 
 class TE_QB_Picker(Picker):
 

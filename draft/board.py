@@ -4,18 +4,18 @@ import adp_list
 class Cell():
     # class representing a cell on the board
 
-    def __init__(self, draft_rnd, pick, player):
+    def __init__(self, draft_rnd, pick, player, pickers):
 
         self.round = draft_rnd
         self.pick = pick
-        self.overall_pick = draft_rnd * len(Board.get_pickers()) + pick
+        self.overall_pick = draft_rnd * len(pickers) + pick
         self.player = player
 
-    def set_player(player):
+    def set_player(self, player):
 
 	self.player = player
 
-    def display_cell():
+    def display_cell(self):
 
         return self.player
 
@@ -39,55 +39,60 @@ class Board():
 		
 		# even rounds traverse pickers backward
 		if i % 2 == 0:
+			#print("round ", str(i), ": ", range(len(pickers),0,-1))
 			for j in range(len(pickers),0,-1):
-				self.cells.append(Cell(i, (len(pickers)+1)-j,pickers[j])) 
+				#print("creating Cell round %s, " % str(i), "pick %s, " % str((len(pickers)+1)-j), "picker %s" % j)
+				self.cells.append(Cell(i, (len(pickers)+1)-j,pickers[j-1], pickers)) 
 		# odd rounds traverse pickers forward
 		else: 
+			#print("round ", str(i), ": ", range(1,len(pickers)+1))
 			for j in range(1,len(pickers)+1):
-				self.cells.append(Cell(i, j, pickers[j]))
+				#print("creating Cell round %s, " % str(i), "pick %s, " % str(j), "picker %s" % j)
+				self.cells.append(Cell(i, j, pickers[j-1], pickers))
 
-    def get_rounds():
+    def get_rounds(self):
 
         return self.rounds
 
-    def get_pickers():
+    def get_pickers(self):
 
         return self.pickers
 
-    def set_rounds(rounds):
+    def set_rounds(self, rounds):
 
         self.rounds = rounds
 
-    def set_pickers(pickers):
+    def set_pickers(self, pickers):
 
         self.pickers = pickers
 
-    def get_cell(overall_pick):
+    def get_cell(self, overall_pick):
 
         return self.cells[overall_pick].player
 
-    def get_cell(draft_rnd, pick):
+    def get_cell(self, draft_rnd, pick):
         
         return self.cells[draft_rnd * len(pickers) + pick].player
 
-    def set_cell(overall_pick, player):
+    def set_cell(self, overall_pick, player):
 
         self.cells[overall_pick].set_player(player)
 
-    def set_cell(draft_rnd, pick, player):
+    def set_cell(self, draft_rnd, pick, player):
 
-        self.cells[draft_rnd * len(pickers) + pick].set_player(player)
+        self.cells[(draft_rnd-1) * len(self.pickers) + pick-1].set_player(player)
+	#print("cell index: %s, " % ((draft_rnd-1) * len(self.pickers) + pick), "round: %s, " % draft_rnd, "pick: %s" % pick)
 
-    def poll_picker(overall_pick, index):
+    #def poll_picker(overall_pick, index):
 	# what do I do here? save to a cell? just return? 
-	self.set_cell(overall_pick, self.get_pickers()[index].think())
+	#self.set_cell(overall_pick, self.get_pickers()[index].think())
 
-    def poll_picker(draft_rnd, pick, index):
+    def poll_picker(self, draft_rnd, pick, index):
 	# what do I do here? save to a cell? just return? 
-	self.set_cell(draft_rnd, pick, self.get_pickers()[index].think())
+	self.set_cell(draft_rnd, pick, self.get_pickers()[index].think(self.adp_list))
     
-    def export_table():
+    def export_table(self):
 	pass
 
-    def update_board():
+    def update_board(self):
 	pass
