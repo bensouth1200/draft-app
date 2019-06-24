@@ -2,12 +2,13 @@ from numpy import random
 
 class Picker():
 
-    def __init__(self, draft_position, rounds, fav_team):
+    def __init__(self, draft_position, rounds, fav_team, name):
 
-        self.type = "picker"
+        self.picker_type = "picker"
         self.draft_pos = draft_position
         self.players = [-1] * rounds
         self.fav_team = fav_team
+	self.name = name
 
     def pick_team(self, fav_team):
         """ pick a team at random """

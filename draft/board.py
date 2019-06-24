@@ -1,5 +1,5 @@
-import draft.picker
-import draft.adp_list
+import picker
+import adp_list
 
 class Board():
     # class representing a draft board

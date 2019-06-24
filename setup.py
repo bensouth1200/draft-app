@@ -9,6 +9,8 @@ setup(
 		'Click',
 		'requests',
 		'numpy',
+		'plotly',
+		'colorlover',
 	],
 	entry_points='''
 		[console_scripts]
