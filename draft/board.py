@@ -1,25 +1,5 @@
-import picker
-import adp_list
-
-class Cell():
-    # class representing a cell on the board
-
-    def __init__(self, draft_rnd, pick, player, pickers):
-
-        self.round = draft_rnd
-        self.pick = pick
-        self.overall_pick = draft_rnd * len(pickers) + pick
-        self.player = player
-
-    def set_player(self, player):
-
-	self.player = player
-
-    def display_cell(self):
-
-        return self.player
-
-
+import draft.picker
+import draft.adp_list
 
 class Board():
     # class representing a draft board
@@ -28,27 +8,27 @@ class Board():
 
         self.rounds = rounds 
         self.pickers = pickers
-	self.adp_list = adp_list
-	self.draft_format = draft_format
+        self.adp_list = adp_list
+        self.draft_format = draft_format
 
         # initialize board here                    
         # nested for loop to create the board.     
         # call cell constructor for each iteration
-	self.cells = []
-	for i in range(1,rounds+1):
+        self.cells = []
+        for i in range(1,rounds+1):
 		
-		# even rounds traverse pickers backward
-		if i % 2 == 0:
-			#print("round ", str(i), ": ", range(len(pickers),0,-1))
-			for j in range(len(pickers),0,-1):
-				#print("creating Cell round %s, " % str(i), "pick %s, " % str((len(pickers)+1)-j), "picker %s" % j)
-				self.cells.append(Cell(i, (len(pickers)+1)-j,pickers[j-1], pickers)) 
-		# odd rounds traverse pickers forward
-		else: 
-			#print("round ", str(i), ": ", range(1,len(pickers)+1))
-			for j in range(1,len(pickers)+1):
-				#print("creating Cell round %s, " % str(i), "pick %s, " % str(j), "picker %s" % j)
-				self.cells.append(Cell(i, j, pickers[j-1], pickers))
+	    # even rounds traverse pickers backward
+            if i % 2 == 0:
+    		#print("round ", str(i), ": ", range(len(pickers),0,-1))
+                for j in range(len(pickers),0,-1):
+		    #print("creating Cell round %s, " % str(i), "pick %s, " % str((len(pickers)+1)-j), "picker %s" % j)
+                    self.cells.append(dict(draft_rnd=i,pick=(len(pickers)+1)-j,picker=pickers[j-1],player="none")) 
+	    # odd rounds traverse pickers forward
+            else: 
+		#print("round ", str(i), ": ", range(1,len(pickers)+1))
+                for j in range(1,len(pickers)+1):
+		    #print("creating Cell round %s, " % str(i), "pick %s, " % str(j), "picker %s" % j)
+                    self.cells.append(dict(draft_rnd=i, pick=j, picker=pickers[j-1], player="none"))
 
     def get_rounds(self):
 
@@ -80,7 +60,7 @@ class Board():
 
     def set_cell(self, draft_rnd, pick, player):
 
-        self.cells[(draft_rnd-1) * len(self.pickers) + pick-1].set_player(player)
+        self.cells[(draft_rnd-1) * len(self.pickers) + pick-1]["player"] = player
 	#print("cell index: %s, " % ((draft_rnd-1) * len(self.pickers) + pick), "round: %s, " % draft_rnd, "pick: %s" % pick)
 
     #def poll_picker(overall_pick, index):
@@ -89,10 +69,10 @@ class Board():
 
     def poll_picker(self, draft_rnd, pick, index):
 	# what do I do here? save to a cell? just return? 
-	self.set_cell(draft_rnd, pick, self.get_pickers()[index].think(self.adp_list))
+        self.set_cell(draft_rnd, pick, self.get_pickers()[index].think(self.adp_list))
     
     def export_table(self):
-	pass
+        pass
 
     def update_board(self):
-	pass
+        pass
