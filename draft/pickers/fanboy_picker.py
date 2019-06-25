@@ -1,14 +1,17 @@
-from picker import Picker
+import draft
+import draft.picker as dp
+#from draft import picker
+print(help('modules draft'))
 
-class fanboyPicker(Picker):
+class fanboyPicker(dp.Picker):
 
     # class to simulate a fanboy drafter. Players on the picker's
     # favorite team will be overvalued 
 
-    def __init__(self, draft_postion, rounds, fav_team=''):
+    def __init__(self, draft_postion, rounds, name, fav_team=''):
 
-        super.__init__(draft_postion, rounds, super.pick_team(fav_team))
+        super(fanboyPicker, self).__init__(draft_postion, rounds, name, fav_team)
         self.picker_type = "fanboy"
 
     def think():
-
+	super(fanboyPicker, self).think()

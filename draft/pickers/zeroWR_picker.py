@@ -1,13 +1,13 @@
-from picker import Picker
+from draft import picker
 
-class zeroWRPicker(Picker):
+class zeroWRPicker(picker.Picker):
 
     # class to simulate a drafter using the zero WR strategy
 
-    def __init__(self, draft_postion, rounds, fav_team):
+    def __init__(self, draft_postion, rounds, name, fav_team=''):
 
-        super.__init__(draft_postion, rounds, super.pick_team(fav_team))
+        super(zeroWRPicker, self).__init__(draft_postion, rounds, name, fav_team)
         self.picker_type = "zero WR"
 
     def think():
-
+	pass

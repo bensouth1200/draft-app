@@ -1,7 +1,7 @@
 from board import Board
-from picker import Picker
 from adp_list import ADPList
 from numpy import random
+import picker
 import click
 import json
 
@@ -35,13 +35,14 @@ def draft(Config, year, draft_format, rounds, teams, players, position):
         """
         adp_list = ADPList(year, teams, draft_format)
 
-        players = ["picker","picker","picker","picker","picker","picker","picker","picker","picker","picker","picker","picker"]
+        players = ["fanboy","fanboy","fanboy","fanboy","fanboy","fanboy","fanboy","fanboy","fanboy","fanboy","fanboy","fanboy"]
 
 	names = pick_team_names(teams)
-        player_vec = []
+        picker_vec = []
 
         for idx, val in enumerate(players):
-                player_vec.append(Picker(idx, rounds, "", names[idx]))
+                picker_vec.append(picker.Picker.factory(players[idx], idx, rounds, names[idx], ''))
+		print(picker_vec[idx].picker_type)
         ###
         #print("player_vec: %s" % player_vec)
         
@@ -49,7 +50,7 @@ def draft(Config, year, draft_format, rounds, teams, players, position):
         Config.draft_format = draft_format
         Config.rounds = rounds
         Config.teams = teams
-        Config.pickers = player_vec
+        Config.pickers = picker_vec
         Config.picker_types = players
         Config.position = position
         Config.adp_list = adp_list
@@ -69,12 +70,12 @@ def single(Config):
                 # even rounds
                 if i % 2 == 0:
                         for j in range(len(Config.pickers),0,-1):
-                                print("picking round %s, " % str(i), "pick %s" % str((len(Config.pickers)+1)-j))
+                                #print("picking round %s, " % str(i), "pick %s" % str((len(Config.pickers)+1)-j))
                                 board.poll_picker(i, (len(Config.pickers)+1)-j, (len(Config.pickers)+1)-j-1)
                 # odd rounds            
                 else:
                         for j in range(1,len(Config.pickers)+1):
-                                print("picking round %s, " % str(i), "pick %s" % str(j))
+                                #print("picking round %s, " % str(i), "pick %s" % str(j))
                                 board.poll_picker(i, j, j-1)
 
         # finish game (post-processing?)
@@ -123,6 +124,22 @@ def triangle(Config, team1, team2, team3):
 # - Iterate through the board polling each picker to make_pick()              #
 # - Finish Game                                                               #
 ############################################################################### 
+
+def determine_picker_type(picker_type, draft_position, rounds, name, fav_team=''):
+	pickers = {
+		"roster": "rosterPicker",
+		"fanboy": "fanboyPicker",
+		"zeroRB": "zeroRBPicker",
+		"zeroWR": "zeroWRPicker",
+		"vb": "valuePicker",
+		"user": "userPicker",
+		"teqb": "TE_QB_Picker"
+	}
+	print(picker_type)
+	constructor = getattr(picker_type, pickers.get(picker_type, "Picker"))
+	print(constructor)
+	return constructor(draft_position, rounds, name, fav_team)
+		
 
 def pick_team_names(number):
  

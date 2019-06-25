@@ -1,9 +1,10 @@
 from setuptools import setup, find_packages
+import os
 
 setup(
 	name='draft',
 	version='1.0',
-	packages = find_packages(),
+	packages = ['draft'],
 	include_package_data=True,
 	install_requires=[
 		'Click',
