@@ -1,5 +1,4 @@
-from setuptools import setup, find_packages
-import os
+from distutils.core import setup
 
 setup(
 	name='draft',

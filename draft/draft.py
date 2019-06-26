@@ -25,7 +25,7 @@ draft_settings = click.make_pass_decorator(Config, ensure=True)
 @click.option('--draft_format', default='standard', help='What type of scoring will the simulated draft be? (standard, half-ppr, ppr)')
 @click.option('--rounds', default=14, help='How many rounds in the draft.')
 @click.option('--teams', default=12, help='How many teams in the draft.')
-@click.option('--players', default=["test1", "test2"], help='An array of the types of pickers.')
+@click.option('--players', default=[], help='An array of the types of pickers.')
 @click.option('--position', default=-1, help='Position that you wish to draft from.')
 @draft_settings
 def draft(Config, year, draft_format, rounds, teams, players, position):
@@ -35,7 +35,9 @@ def draft(Config, year, draft_format, rounds, teams, players, position):
         """
         adp_list = ADPList(year, teams, draft_format)
 
-        players = ["fanboy","fanboy","fanboy","fanboy","fanboy","fanboy","fanboy","fanboy","fanboy","fanboy","fanboy","fanboy"]
+        #players = ["fanboy","fanboy","fanboy","fanboy","fanboy","fanboy","fanboy","fanboy","fanboy","fanboy","fanboy","fanboy"]
+        if not players:
+            players = picker.Picker.assign_pickers(teams)
 
 	names = pick_team_names(teams)
         picker_vec = []
@@ -70,12 +72,12 @@ def single(Config):
                 # even rounds
                 if i % 2 == 0:
                         for j in range(len(Config.pickers),0,-1):
-                                #print("picking round %s, " % str(i), "pick %s" % str((len(Config.pickers)+1)-j))
+                                print("picking round %s, " % str(i), "pick %s" % str((len(Config.pickers)+1)-j))
                                 board.poll_picker(i, (len(Config.pickers)+1)-j, (len(Config.pickers)+1)-j-1)
                 # odd rounds            
                 else:
                         for j in range(1,len(Config.pickers)+1):
-                                #print("picking round %s, " % str(i), "pick %s" % str(j))
+                                print("picking round %s, " % str(i), "pick %s" % str(j))
                                 board.poll_picker(i, j, j-1)
 
         # finish game (post-processing?)
