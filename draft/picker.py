@@ -6,9 +6,10 @@ class Picker(object):
 
         self.picker_type = "picker"
         self.draft_pos = draft_position
-        self.players = [-1] * rounds
-        self.fav_team = fav_team
+        self.players = []
 	self.name = name
+        self.fav_team = self.pick_team(fav_team)
+        self.lineup = dict(QB=1, RB=2, WR=2, TE=1, FLEX=1, DEF=1, PK=1, BNCH=rounds-9)
 
     def pick_team(self, fav_team):
         """ pick a team at random """
@@ -43,7 +44,14 @@ class Picker(object):
         # dumb function. Randomly choose a player from the list       
         # provided based on the percentages provided with the players 
         choice = random.choice(player_index, 1, distribution)
-        print(choice[0]['name'])
+        #print(choice[0]['name'])
+	if self.lineup[choice[0]['position']] == 0:
+            if self.lineup['FLEX'] == 0:
+                self.lineup['BNCH'] = self.lineup['BNCH'] - 1
+            else:
+                self.lineup['FLEX'] = self.lineup['FLEX'] - 1
+        else:
+            self.lineup[choice[0]['position']] = self.lineup[choice[0]['position']] - 1
         return choice[0]
 	
 
@@ -54,6 +62,7 @@ class Picker(object):
         distribution = [0.2, 0.2, 0.2, 0.2, 0.2]
         pick = self.make_pick(player_index, distribution) 
         adp_list.remove_player(pick['name'])
+        self.players.append(pick)
         return pick
 
 ###############################################################
@@ -66,9 +75,32 @@ class fanboyPicker(Picker):
 
         super(fanboyPicker, self).__init__(draft_postion, rounds, name, fav_team)
         self.picker_type = "fanboy"
+        #print("fanboy team: %s" % self.fav_team)
 
     def think(self, adp_list):
-        super(fanboyPicker, self).think(adp_list)
+        team_players = []
+        for x in adp_list.players:
+            if x['team'] == self.fav_team:
+                team_players.append(x)
+
+        if len(adp_list.players) >= 5:
+            player_index = adp_list.players[0:4]
+            if not team_players:
+                player_index.append(adp_list.players[4])
+            else:
+                player_index.append(team_players[0])
+        #print(player_index)
+            distribution = [0.225,0.225,0.225,0.225,0.1]
+        else:
+            player_index = adp_list.players
+            distribution = [1.0/len(adp_list.players) for x in range(len(adp_list.players))]
+
+        pick = super(fanboyPicker, self).make_pick(player_index, distribution)
+        print(pick['name'])
+        adp_list.remove_player(pick['name'])
+        self.players.append(pick)
+        return pick
+        #super(fanboyPicker, self).think(adp_list)
 
 
 
@@ -83,7 +115,7 @@ class valuePicker(Picker):
         self.picker_type = "value-based"
 
     def think(self, adp_list):
-        super(valuePicker, self).think(adp_list)
+        return super(valuePicker, self).think(adp_list)
 
 
 
@@ -98,7 +130,59 @@ class zeroRBPicker(Picker):
         self.picker_type = "zero RB"
 
     def think(self, adp_list):
-        super(zeroRBPicker, self).think(adp_list)
+        # split the adp list into RBs and everyone else
+        rbs  = []
+        qbs  = []
+        wrs  = []
+        tes  = []
+        defk = []
+        for x in adp_list.players:
+            if x['position'] == 'RB':
+                rbs.append(x)
+            elif x['position'] == 'WR':
+                wrs.append(x)
+            elif x['position'] == 'QB':
+                qbs.append(x)
+            elif x['position'] == 'TE':
+                tes.append(x)
+            else:
+                defk.append(x)
+
+        if len(self.players) < 5:
+            player_index = wrs[0:3]
+            player_index.append(qbs[0])
+            player_index.append(tes[0])
+            distribution = [0.25,0.25,0.25,0.125,0.125]
+        elif len(self.players) < 12:
+            player_index = rbs[0:3]
+            player_index.append(wrs[0])
+            player_index.append(qbs[0])
+            player_index.append(tes[0])
+            distribution = [0.3,0.3,0.3,0.033,0.034,0.033]
+        elif len(self.players) < 12:
+            # conditional here to pick up what we dont have?
+            player_index = wrs[0:2]
+            if qbs:
+                player_index.append(qbs[0])
+            if rbs:
+                player_index.append(rbs[0])
+            if tes:
+                player_index.append(tes[0])
+            distribution = [1.0/len(player_index) for x in range(len(player_index))]
+        else:
+            player_index = defk
+            if qbs:
+                player_index.append(qbs[0])
+            if rbs:
+                player_index.append(rbs[0])
+            if tes:
+                player_index.append(tes[0])
+            distribution = [1.0/len(player_index) for x in range(len(player_index))]
+            
+	pick = super(zeroRBPicker, self).make_pick(player_index, distribution)
+        adp_list.remove_player(pick['name'])
+        self.players.append(pick)
+        return pick
 
 
 
@@ -115,7 +199,59 @@ class zeroWRPicker(Picker):
         self.picker_type = "zero WR"
 
     def think(self, adp_list):
-        super(zeroWRPicker, self).think(adp_list)
+        # split the adp list into RBs and everyone else
+        rbs  = []
+        qbs  = []
+        wrs  = []
+        tes  = []
+        defk = []
+        for x in adp_list.players:
+            if x['position'] == 'RB':
+                rbs.append(x)
+            elif x['position'] == 'WR':
+                wrs.append(x)
+            elif x['position'] == 'QB':
+                qbs.append(x)
+            elif x['position'] == 'TE':
+                tes.append(x)
+            else:
+                defk.append(x)
+
+        if len(self.players) < 5:
+            player_index = rbs[0:3]
+            player_index.append(qbs[0])
+            player_index.append(tes[0])
+            distribution = [0.25,0.25,0.25,0.125,0.125]
+        elif len(self.players) < 8:
+            player_index = wrs[0:3]
+            player_index.append(rbs[0])
+            player_index.append(qbs[0])
+            player_index.append(tes[0])
+            distribution = [0.3,0.3,0.3,0.033,0.034,0.033]
+        elif len(self.players) < 12:
+            # conditional here to pick up what we dont have?
+            player_index = wrs[0:2]
+            if qbs:
+                player_index.append(qbs[0])
+            if rbs:
+                player_index.append(rbs[0])
+            if tes:
+                player_index.append(tes[0])
+            distribution = [1.0/len(player_index) for x in range(len(player_index))]
+        else:
+            player_index = defk
+            if qbs:
+                player_index.append(qbs[0])
+            if rbs:
+                player_index.append(wrs[0])
+            if tes:
+                player_index.append(tes[0])
+            distribution = [1.0/len(player_index) for x in range(len(player_index))]
+            
+	pick = super(zeroWRPicker, self).make_pick(player_index, distribution)
+        adp_list.remove_player(pick['name'])
+        self.players.append(pick)
+        return pick
 
 
 
@@ -131,7 +267,7 @@ class TE_QB_Picker(Picker):
         self.picker_type = "TE/QB"
 
     def think(self, adp_list):
-        super(TE_QB_Picker, self).think(adp_list)
+        return super(TE_QB_Picker, self).think(adp_list)
 
 
 
@@ -147,7 +283,7 @@ class userPicker(Picker):
         self.picker_type = "user"
 
     def think(self, adp_list):
-        super(userPicker, self).think(adp_list)
+        return super(userPicker, self).think(adp_list)
 
 
 
@@ -164,5 +300,5 @@ class rosterPicker(Picker):
         self.picker_type = "roster"
 
     def think(self, adp_list):
-        super(rosterPicker, self).think(adp_list)
+        return super(rosterPicker, self).think(adp_list)
 

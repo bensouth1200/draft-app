@@ -73,11 +73,13 @@ def single(Config):
                 if i % 2 == 0:
                         for j in range(len(Config.pickers),0,-1):
                                 print("picking round %s, " % str(i), "pick %s" % str((len(Config.pickers)+1)-j))
-                                board.poll_picker(i, (len(Config.pickers)+1)-j, (len(Config.pickers)+1)-j-1)
+                                #board.poll_picker(i, (len(Config.pickers)+1)-j, (len(Config.pickers)+1)-j-1)
+                                board.poll_picker(i, (len(Config.pickers)+1)-j, j-1)
                 # odd rounds            
                 else:
                         for j in range(1,len(Config.pickers)+1):
                                 print("picking round %s, " % str(i), "pick %s" % str(j))
+                                #board.poll_picker(i, j, j-1)
                                 board.poll_picker(i, j, j-1)
 
         # finish game (post-processing?)

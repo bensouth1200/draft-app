@@ -54,9 +54,9 @@ class Board():
         
         return self.cells[draft_rnd * len(pickers) + pick].player
 
-    def set_cell(self, overall_pick, player):
+    #def set_cell(self, overall_pick, player):
 
-        self.cells[overall_pick].set_player(player)
+    #    self.cells[overall_pick].set_player(player)
 
     def set_cell(self, draft_rnd, pick, player):
 

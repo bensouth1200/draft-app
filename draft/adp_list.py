@@ -10,6 +10,7 @@ class ADPList():
         urllib3.disable_warnings()        
         response = requests.get("https://fantasyfootballcalculator.com/api/v1/adp/" + str(draft_format) + "?teams=" + str(teams) + "&year=" + str(year))
         data = json.loads(response.text)
+        #print(len(data['players']))
         self.players = data['players']
 
     # this will remove the player from the adp list
