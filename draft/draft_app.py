@@ -1,6 +1,6 @@
 import click
-import picker
-import adp_list
+import draft.picker as picker
+import draft.adp_list as adp_list
 import draft
 
 @click.command()

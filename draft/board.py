@@ -1,5 +1,6 @@
-import picker
-import adp_list
+import draft.picker as picker
+import draft.adp_list as adp_list
+import scipy.stats as ss
 
 class Board():
     # class representing a draft board
@@ -76,3 +77,11 @@ class Board():
 
     def update_board(self):
         pass
+
+    def calculate_rank():
+        points = []
+        for i in len(self.pickers):
+            points.append(self.pickers[i].season_points)
+        
+        return ss.rankpick(points, method='min')
+
